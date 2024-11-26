@@ -24,7 +24,7 @@ Group {
  addUserKnob {26 "" +STARTLINE}
  addUserKnob {26 _1 l "" +STARTLINE T "Use after premultiplication."}
  addUserKnob {20 info l Info}
- addUserKnob {26 _2 l "" +STARTLINE T "Atempt to mimic lens aberration using static vector fields.\nTake in consideration that VectorAberration is an experiment and wasn't built for performance."}
+ addUserKnob {26 _2 l "" +STARTLINE T "Attempt to mimic lens aberration using static vector fields.\nTake in consideration that VectorAberration is an experiment and wasn't built for performance."}
  addUserKnob {26 "" +STARTLINE}
  addUserKnob {26 _4 l "" +STARTLINE T "Created by <b><a href=\"https://vimeo.com/lucascoutinho\">Lucas L. Coutinho</a></b>"}
  addUserKnob {26 _3 l "" +STARTLINE T "Version: <b>v01"}
