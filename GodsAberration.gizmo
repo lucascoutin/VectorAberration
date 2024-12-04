@@ -1,0 +1,224 @@
+Group {
+ name GodsAberration
+ inputs 2
+ tile_color 0xff
+ addUserKnob {20 control l Controls}
+ addUserKnob {4 mode l Mode M {Combined Aberration}}
+ addUserKnob {7 tint l Tint t "Magenta to green shift." R -0.5 0.5}
+ tint 0.5
+ addUserKnob {7 temp l Temperature t "Blue to yellow shift." R -0.5 0.5}
+ temp -0.5
+ addUserKnob {26 ""}
+ addUserKnob {7 zoom l Zoom t "Lateral chromatic aberration." R -1 1}
+ addUserKnob {7 rot l Rotation t "Rotation color shift." R -1 1}
+ addUserKnob {7 hori l Horizontal t "Longitudinal chromatic aberration, X-Axis." R -1 1}
+ addUserKnob {7 vert l Vertical t "Longitudinal chromatic aberration, Y-Axis." R -1 1}
+ addUserKnob {3 stp l Quality t "Increase sampling value for better output. 5 is default."}
+ stp 5
+ addUserKnob {6 mx l Max -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 _6 l "" +STARTLINE T "<b>Center Point Control"}
+ addUserKnob {7 centerx l Horizontal t "Central point for zoom and rotation." R -1 1}
+ addUserKnob {7 centery l Vertical t "Central point for zoom and rotation." R -1 1}
+ addUserKnob {26 ""}
+ addUserKnob {7 def l Defocus t "Spherical chromatic aberration." R 0 4}
+ addUserKnob {7 shift l "Chroma Shift" t "Spherical color shift." R -1 1}
+ addUserKnob {26 ""}
+ addUserKnob {26 _1 l "" +STARTLINE T "Use after premultiplication."}
+ addUserKnob {20 info l Info}
+ addUserKnob {26 _2 l "" +STARTLINE T "​Lightweight tool that mimics most common lens aberrations."}
+ addUserKnob {26 ""}
+ addUserKnob {26 _4 l "" +STARTLINE T "Created by <b><a href=\"https://vimeo.com/lucascoutinho\">Lucas L. Coutinho</a></b>"}
+ addUserKnob {26 _3 l "" +STARTLINE T "Version: <b>v01"}
+ addUserKnob {26 _5 l "" +STARTLINE T "Year: 2024"}
+}
+ Input {
+  inputs 0
+  name Source
+  xpos -310
+  ypos -599
+ }
+ Remove {
+  operation keep
+  channels rgba
+  name Remove1
+  xpos -310
+  ypos -475
+ }
+ Dot {
+  name Dot3
+  xpos -276
+  ypos -364
+ }
+set Ncc47fc00 [stack 0]
+ Dot {
+  name Dot1
+  xpos -721
+  ypos -361
+ }
+set Ncc47f800 [stack 0]
+ Dot {
+  name Dot2
+  xpos -876
+  ypos -361
+ }
+set Ncc47f400 [stack 0]
+ Dot {
+  name Dot8
+  xpos -1079
+  ypos -361
+ }
+ Expression {
+  channel0 rgb
+  expr0 "clamp(10 - hypot(x-pos.x, y-pos.y))"
+  name Expression1
+  xpos -1113
+  ypos -37
+  addUserKnob {20 User}
+  addUserKnob {12 pos l Position}
+  pos {{parent.GodRays1.center} {parent.GodRays1.center}}
+ }
+ Dot {
+  name Dot7
+  xpos -1079
+  ypos 292
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos -535
+  ypos -238
+  number 1
+ }
+ Dot {
+  name Dot6
+  xpos -501
+  ypos -150
+ }
+set Nd49f800 [stack 0]
+ Dot {
+  name Dot9
+  xpos -501
+  ypos -110
+ }
+set Nd492400 [stack 0]
+push $Nd49f800
+push $Ncc47f800
+ Multiply {
+  channels rgba
+  value {{"tint + 0.5" x1 0.008} {"1 - value.r" x1 1.005} {"temp + 0.5" x1 0.51} {curve x1 0.5}}
+  value_panelDropped true
+  name Multiply1
+  xpos -755
+  ypos -193
+ }
+ GodRays {
+  inputs 1+1
+  channels rgba
+  translate {{parent.hori*10} {parent.vert*10}}
+  rotate {{parent.rot}}
+  scale {{1+parent.zoom/100}}
+  center {{"input.width/2 + centerx*width/2"} {"input.height/2 + centery*height/2"}}
+  steps {{parent.stp}}
+  max {{mx}}
+  name GodRays1
+  xpos -755
+  ypos -153
+ }
+ Defocus {
+  inputs 1+1
+  channels rgba
+  defocus {{"def - shift*def + def"}}
+  name Defocus1
+  xpos -755
+  ypos -113
+ }
+ Dot {
+  name Dot4
+  xpos -721
+  ypos 28
+ }
+push $Nd492400
+push $Nd49f800
+push $Ncc47fc00
+ Multiply {
+  channels rgba
+  value {{0.5-tint} {"1 - GodsAberration.Multiply2.value.r" x1 0.2} {1-GodsAberration.Multiply1.value.b} {parent.Multiply1.value.a}}
+  value_panelDropped true
+  name Multiply2
+  xpos -310
+  ypos -193
+ }
+ GodRays {
+  inputs 1+1
+  channels rgba
+  translate {{-parent.GodRays1.translate} {-parent.GodRays1.translate}}
+  rotate {{-parent.GodRays1.rotate}}
+  scale {{1-parent.zoom/100}}
+  center {{parent.GodRays1.center} {parent.GodRays1.center}}
+  steps {{parent.stp}}
+  max {{mx}}
+  name GodRays2
+  xpos -310
+  ypos -153
+ }
+ Defocus {
+  inputs 1+1
+  channels rgba
+  defocus {{"def + shift*def + def"}}
+  name Defocus2
+  xpos -310
+  ypos -113
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge1
+  xpos -310
+  ypos 22
+ }
+ Reformat {
+  type scale
+  resize none
+  black_outside true
+  name Reformat1
+  xpos -310
+  ypos 157
+ }
+set Nd459800 [stack 0]
+push $Ncc47f400
+ Merge2 {
+  inputs 2
+  operation difference
+  bbox B
+  name Merge2
+  xpos -910
+  ypos 160
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  bbox B
+  name Merge3
+  xpos -910
+  ypos 289
+ }
+ Dot {
+  name Dot5
+  xpos -876
+  ypos 418
+ }
+push $Nd459800
+ Switch {
+  inputs 2
+  which {{mode}}
+  name Switch1
+  xpos -310
+  ypos 412
+ }
+ Output {
+  name Output1
+  xpos -310
+  ypos 565
+ }
+end_group
