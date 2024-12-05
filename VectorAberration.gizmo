@@ -1,31 +1,33 @@
 Group {
- name VectorAberration
+ name GodsAberration
+ inputs 2
  tile_color 0xff
  addUserKnob {20 control l Controls}
+ addUserKnob {4 mode l Mode M {Combined Aberration}}
  addUserKnob {7 tint l Tint t "Magenta to green shift." R -0.5 0.5}
- tint {0.5}
+ tint 0.5
  addUserKnob {7 temp l Temperature t "Blue to yellow shift." R -0.5 0.5}
- temp {-0.5}
- addUserKnob {26 "" +STARTLINE}
- addUserKnob {7 pinc l Pincushion t "Lens distortion pincushion model." R -1 1}
- pinc {0}
+ temp -0.5
+ addUserKnob {26 ""}
  addUserKnob {7 zoom l Zoom t "Lateral chromatic aberration." R -1 1}
  addUserKnob {7 rot l Rotation t "Rotation color shift." R -1 1}
- rot {0}
  addUserKnob {7 hori l Horizontal t "Longitudinal chromatic aberration, X-Axis." R -1 1}
- hori {0}
  addUserKnob {7 vert l Vertical t "Longitudinal chromatic aberration, Y-Axis." R -1 1}
- vert {0}
- addUserKnob {26 "" +STARTLINE}
+ addUserKnob {3 stp l Quality t "Increase sampling value for better output. 5 is default."}
+ stp 5
+ addUserKnob {6 mx l Max -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 _6 l "" +STARTLINE T "<b>Center Point Control"}
+ addUserKnob {7 centerx l Horizontal t "Central point for zoom and rotation." R -1 1}
+ addUserKnob {7 centery l Vertical t "Central point for zoom and rotation." R -1 1}
+ addUserKnob {26 ""}
  addUserKnob {7 def l Defocus t "Spherical chromatic aberration." R 0 4}
- def {0}
- addUserKnob {7 shift l Shift t "Spherical color shift." R -1 1}
- shift {0}
- addUserKnob {26 "" +STARTLINE}
+ addUserKnob {7 shift l "Chroma Shift" t "Spherical color shift." R -1 1}
+ addUserKnob {26 ""}
  addUserKnob {26 _1 l "" +STARTLINE T "Use after premultiplication."}
  addUserKnob {20 info l Info}
- addUserKnob {26 _2 l "" +STARTLINE T "Attempt to mimic lens aberration using static vector fields.\nTake in consideration that VectorAberration is an experiment and wasn't built for performance."}
- addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE T "​Lightweight tool that mimics most common lens aberrations."}
+ addUserKnob {26 ""}
  addUserKnob {26 _4 l "" +STARTLINE T "Created by <b><a href=\"https://vimeo.com/lucascoutinho\">Lucas L. Coutinho</a></b>"}
  addUserKnob {26 _3 l "" +STARTLINE T "Version: <b>v01"}
  addUserKnob {26 _5 l "" +STARTLINE T "Year: 2024"}
@@ -34,463 +36,189 @@ Group {
   inputs 0
   name Source
   xpos -310
-  ypos -534
+  ypos -599
  }
  Remove {
   operation keep
   channels rgba
   name Remove1
   xpos -310
-  ypos -423
+  ypos -475
  }
  Dot {
   name Dot3
   xpos -276
-  ypos -310
+  ypos -364
  }
-set N7f538800 [stack 0]
- Dot {
-  name Dot2
-  xpos -711
-  ypos -310
- }
-set N7f538c00 [stack 0]
- Expression {
-  channel0 {forward.u -forward.v}
-  expr0 "atan(cx) * pow2(cy)"
-  channel1 {-forward.u forward.v}
-  expr1 "atan(cy) * pow2(cx)"
-  channel2 {-rgba.red -rgba.green -rgba.blue}
-  name Pincushion
-  xpos -745
-  ypos -55
- }
-set N7f87f000 [stack 0]
- Remove {
-  name Remove2
-  xpos -745
-  ypos 167
- }
- Expression {
-  channel0 {forward.u -forward.v}
-  expr0 atan(cx)
-  channel1 {-forward.u forward.v}
-  expr1 atan(cy)
-  channel2 {-rgba.red -rgba.green -rgba.blue none}
-  name Zoom
-  xpos -745
-  ypos 219
- }
-set Na0a2000 [stack 0]
- Remove {
-  name Remove3
-  xpos -745
-  ypos 454
- }
- Expression {
-  channel0 {forward.u -forward.v}
-  expr0 -cy
-  channel1 {-forward.u forward.v}
-  expr1 cx
-  channel2 {-rgba.red -rgba.green -rgba.blue none}
-  name Rotation
-  xpos -745
-  ypos 506
- }
-set N11946800 [stack 0]
- Remove {
-  name Remove4
-  xpos -745
-  ypos 742
- }
- Expression {
-  channel0 {forward.u -forward.v}
-  expr0 1
-  channel1 {-forward.u forward.v}
-  channel2 {-rgba.red -rgba.green -rgba.blue none}
-  name Horizontal
-  xpos -745
-  ypos 794
- }
-set N6863a400 [stack 0]
- Remove {
-  name Remove5
-  xpos -745
-  ypos 1024
- }
- Expression {
-  channel0 {forward.u -forward.v}
-  channel1 {-forward.u forward.v}
-  expr1 1
-  channel2 {-rgba.red -rgba.green -rgba.blue none}
-  name Vertical
-  xpos -745
-  ypos 1076
- }
-set N740bb800 [stack 0]
- Multiply {
-  value {{parent.vert}}
-  name Multiply11
-  xpos -965
-  ypos 1070
- }
-push $N6863a400
- Multiply {
-  value {{parent.hori}}
-  name Multiply9
-  xpos -965
-  ypos 788
- }
-push $N11946800
- Multiply {
-  value {{parent.rot}}
-  name Multiply7
-  xpos -970
-  ypos 500
- }
-push $Na0a2000
- Multiply {
-  value {{parent.zoom}}
-  name Multiply5
-  xpos -975
-  ypos 213
- }
-push $N7f87f000
- Multiply {
-  value {{parent.pinc}}
-  name Multiply3
-  xpos -985
-  ypos -61
- }
-push $N7f538c00
+set Ncc47fc00 [stack 0]
  Dot {
   name Dot1
-  xpos -1148
-  ypos -310
+  xpos -721
+  ypos -361
  }
+set Ncc47f800 [stack 0]
+ Dot {
+  name Dot2
+  xpos -876
+  ypos -361
+ }
+set Ncc47f400 [stack 0]
+ Dot {
+  name Dot8
+  xpos -1079
+  ypos -361
+ }
+ Expression {
+  channel0 rgb
+  expr0 "clamp(10 - hypot(x-pos.x, y-pos.y))"
+  name Expression1
+  xpos -1113
+  ypos -37
+  addUserKnob {20 User}
+  addUserKnob {12 pos l Position}
+  pos {{parent.GodRays1.center} {parent.GodRays1.center}}
+ }
+ Dot {
+  name Dot7
+  xpos -1079
+  ypos 292
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos -535
+  ypos -238
+  number 1
+ }
+ Dot {
+  name Dot6
+  xpos -501
+  ypos -150
+ }
+set Nd49f800 [stack 0]
+ Dot {
+  name Dot9
+  xpos -501
+  ypos -110
+ }
+set Nd492400 [stack 0]
+push $Nd49f800
+push $Ncc47f800
  Multiply {
   channels rgba
   value {{"tint + 0.5" x1 0.008} {"1 - value.r" x1 1.005} {"temp + 0.5" x1 0.51} {curve x1 0.5}}
   value_panelDropped true
   name Multiply1
-  xpos -1182
-  ypos -276
+  xpos -755
+  ypos -193
  }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle1
-  xpos -1182
-  ypos -55
- }
- VectorBlur2 {
+ GodRays {
+  inputs 1+1
   channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  offset -0.75
-  normalize false
-  name VectorBlur1
-  xpos -1182
-  ypos -15
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle3
-  xpos -1182
-  ypos 219
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  offset -0.75
-  normalize false
-  name VectorBlur3
-  xpos -1182
-  ypos 259
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle5
-  xpos -1182
-  ypos 506
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  offset -0.75
-  normalize false
-  name VectorBlur5
-  xpos -1182
-  ypos 546
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle7
-  xpos -1182
-  ypos 794
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  offset -0.75
-  normalize false
-  name VectorBlur7
-  xpos -1182
-  ypos 834
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle9
-  xpos -1182
-  ypos 1076
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  offset -0.75
-  normalize false
-  name VectorBlur9
-  xpos -1182
-  ypos 1116
+  translate {{parent.hori*10} {parent.vert*10}}
+  rotate {{parent.rot}}
+  scale {{1+parent.zoom/100}}
+  center {{"input.width/2 + centerx*width/2"} {"input.height/2 + centery*height/2"}}
+  steps {{parent.stp}}
+  max {{mx}}
+  name GodRays1
+  xpos -755
+  ypos -153
  }
  Defocus {
+  inputs 1+1
   channels rgba
   defocus {{"def - shift*def + def"}}
   name Defocus1
-  xpos -1182
-  ypos 1334
+  xpos -755
+  ypos -113
  }
  Dot {
   name Dot4
-  xpos -1148
-  ypos 1550
+  xpos -721
+  ypos 28
  }
-push $N740bb800
- Multiply {
-  value {{parent.vert}}
-  name Multiply12
-  xpos -525
-  ypos 1070
- }
-push $N6863a400
- Multiply {
-  value {{parent.hori}}
-  name Multiply10
-  xpos -518
-  ypos 788
- }
-push $N11946800
- Multiply {
-  value {{parent.rot}}
-  name Multiply8
-  xpos -523
-  ypos 500
- }
-push $Na0a2000
- Multiply {
-  value {{parent.zoom}}
-  name Multiply6
-  xpos -521
-  ypos 213
- }
-push $N7f87f000
- Multiply {
-  value {{parent.pinc}}
-  name Multiply4
-  xpos -528
-  ypos -61
- }
-push $N7f538800
+push $Nd492400
+push $Nd49f800
+push $Ncc47fc00
  Multiply {
   channels rgba
-  value {{0.5-tint} {"1 - VectorAberration.Multiply2.value.r" x1 0.2} {1-VectorAberration.Multiply1.value.b} {parent.Multiply1.value.a}}
+  value {{0.5-tint} {"1 - GodsAberration.Multiply2.value.r" x1 0.2} {1-GodsAberration.Multiply1.value.b} {parent.Multiply1.value.a}}
   value_panelDropped true
   name Multiply2
   xpos -310
-  ypos -276
+  ypos -193
  }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle2
-  xpos -310
-  ypos -55
- }
- VectorBlur2 {
+ GodRays {
+  inputs 1+1
   channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  normalize false
-  name VectorBlur2
+  translate {{-parent.GodRays1.translate} {-parent.GodRays1.translate}}
+  rotate {{-parent.GodRays1.rotate}}
+  scale {{1-parent.zoom/100}}
+  center {{parent.GodRays1.center} {parent.GodRays1.center}}
+  steps {{parent.stp}}
+  max {{mx}}
+  name GodRays2
   xpos -310
-  ypos -15
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle4
-  xpos -310
-  ypos 219
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  normalize false
-  name VectorBlur4
-  xpos -310
-  ypos 259
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle6
-  xpos -310
-  ypos 506
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  normalize false
-  name VectorBlur6
-  xpos -310
-  ypos 546
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle8
-  xpos -310
-  ypos 794
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  normalize false
-  name VectorBlur8
-  xpos -310
-  ypos 834
- }
- Shuffle2 {
-  inputs 2
-  fromInput1 {{1} B A}
-  in1 forward
-  out1 forward
-  fromInput2 {{0} B A}
-  mappings "2 forward.u 0 0 forward.u 0 0 forward.v 0 1 forward.v 0 1"
-  name Shuffle10
-  xpos -310
-  ypos 1076
- }
- VectorBlur2 {
-  channels rgba
-  uv forward
-  mv_presets Arnold
-  blur_uv uniform
-  scale 20
-  normalize false
-  name VectorBlur10
-  xpos -310
-  ypos 1116
+  ypos -153
  }
  Defocus {
+  inputs 1+1
   channels rgba
   defocus {{"def + shift*def + def"}}
   name Defocus2
   xpos -310
-  ypos 1338
+  ypos -113
  }
  Merge2 {
   inputs 2
   operation plus
   name Merge1
   xpos -310
-  ypos 1547
+  ypos 22
  }
- Remove {
-  operation keep
-  channels rgba
-  name Remove6
+ Reformat {
+  type scale
+  resize none
+  black_outside true
+  name Reformat1
   xpos -310
-  ypos 1587
+  ypos 157
+ }
+set Nd459800 [stack 0]
+push $Ncc47f400
+ Merge2 {
+  inputs 2
+  operation difference
+  bbox B
+  name Merge2
+  xpos -910
+  ypos 160
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  bbox B
+  name Merge3
+  xpos -910
+  ypos 289
+ }
+ Dot {
+  name Dot5
+  xpos -876
+  ypos 418
+ }
+push $Nd459800
+ Switch {
+  inputs 2
+  which {{mode}}
+  name Switch1
+  xpos -310
+  ypos 412
  }
  Output {
   name Output1
-  selected true
   xpos -310
-  ypos 1792
- }
- Viewer {
-  frame 26
-  frame_range 1-100
-  viewerProcess "ACES 1.0 - SDR Video (sRGB - Display)"
-  monitorOutNDISenderName "Nuke - untitled - Viewer1"
-  name Viewer1
-  xpos -633
-  ypos 2209
+  ypos 565
  }
 end_group
